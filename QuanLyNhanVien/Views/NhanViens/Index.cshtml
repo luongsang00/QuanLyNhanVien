@@ -1,25 +1,25 @@
 ﻿@model IEnumerable<QuanLyNhanVien.Models.NhanVien>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý nhân viên";
 }
 
-<h1>Index</h1>
+<h1>Danh sách nhân viên</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Thêm thành viên</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Ten)
+                @*@Html.DisplayNameFor(model => model.Ten)*@Tên
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DiaChi)
+                @*@Html.DisplayNameFor(model => model.DiaChi)*@Địa chỉ
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SoDienThoai)
+                @*@Html.DisplayNameFor(model => model.SoDienThoai)*@Số điện thoại
             </th>
             <th></th>
         </tr>
@@ -37,9 +37,9 @@
                 @Html.DisplayFor(modelItem => item.SoDienThoai)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Sửa</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Chi Tiết</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Xóa</a>
             </td>
         </tr>
 }
