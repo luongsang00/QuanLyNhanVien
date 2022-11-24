@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace QuanLyNhanVien.Models
 {
@@ -18,18 +16,16 @@ namespace QuanLyNhanVien.Models
         {
         }
 
+        public virtual DbSet<KyNang> KyNangs { get; set; } = null!;
+        public virtual DbSet<LoaiNhanVien> LoaiNhanViens { get; set; } = null!;
         public virtual DbSet<NhanVien> NhanViens { get; set; } = null!;
-
-        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
-
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;database=quanlynhanvien;userid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.22-mariadb"));
+                optionsBuilder.UseMySql("server=localhost;database=quanlynhanvien;userid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.27-mariadb"));
             }
         }
 
@@ -37,6 +33,38 @@ namespace QuanLyNhanVien.Models
         {
             modelBuilder.UseCollation("utf8mb4_general_ci")
                 .HasCharSet("utf8mb4");
+
+            modelBuilder.Entity<KyNang>(entity =>
+            {
+                entity.HasKey(e => e.IdKyNang)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("ky_nang");
+
+                entity.Property(e => e.IdKyNang)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_Ky_Nang");
+
+                entity.Property(e => e.TenLoaiKn)
+                    .HasMaxLength(255)
+                    .HasColumnName("Ten_LoaiKN");
+            });
+
+            modelBuilder.Entity<LoaiNhanVien>(entity =>
+            {
+                entity.HasKey(e => e.IdLoaiNv)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("loai_nhan_vien");
+
+                entity.Property(e => e.IdLoaiNv)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_LoaiNV");
+
+                entity.Property(e => e.TenLoaiNv)
+                    .HasMaxLength(255)
+                    .HasColumnName("Ten_LoaiNV");
+            });
 
             modelBuilder.Entity<NhanVien>(entity =>
             {
@@ -47,6 +75,14 @@ namespace QuanLyNhanVien.Models
                     .HasColumnName("id");
 
                 entity.Property(e => e.DiaChi).HasMaxLength(255);
+
+                entity.Property(e => e.IdKyNang)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_Ky_Nang");
+
+                entity.Property(e => e.IdLoaiNv)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_LoaiNV");
 
                 entity.Property(e => e.SoDienThoai).HasMaxLength(255);
 

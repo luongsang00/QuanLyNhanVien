@@ -6,36 +6,53 @@
 
 <h1>Create</h1>
 
-
+<h4>NhanVien</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Ten" class="control-label">Tên</label>
+                <label asp-for="Ten" class="control-label"></label>
                 <input asp-for="Ten" class="form-control" />
                 <span asp-validation-for="Ten" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DiaChi" class="control-label">Địa chỉ</label>
+                <label asp-for="DiaChi" class="control-label"></label>
                 <input asp-for="DiaChi" class="form-control" />
                 <span asp-validation-for="DiaChi" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SoDienThoai" class="control-label">Số điện thoại</label>
+                <label asp-for="SoDienThoai" class="control-label"></label>
                 <input asp-for="SoDienThoai" class="form-control" />
                 <span asp-validation-for="SoDienThoai" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Lưu" class="btn btn-primary" />
+                <label asp-for="IdLoaiNv" class="control-label"></label>
+                @*<input asp-for="IdLoaiNv" class="form-control" />*@
+                <select asp-for="IdLoaiNv" asp-items="@ViewBag.LoaiNvlist" class="form-control">
+                    <option>Chọn Chức vụ</option>
+                </select>
+                <span asp-validation-for="IdLoaiNv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdKyNang" class="control-label"></label>
+                @*<input asp-for="IdKyNang" class="form-control" value=""/>*@
+
+                <select asp-for="IdKyNang" asp-items="@ViewBag.KyNanglist" class="form-control">
+                    <option>Chọn Kỹ Năng</option>
+                </select>
+                <span asp-validation-for="IdKyNang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Trở lại danh sách</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

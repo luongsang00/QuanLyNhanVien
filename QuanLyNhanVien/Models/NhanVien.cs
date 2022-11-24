@@ -9,5 +9,7 @@ namespace QuanLyNhanVien.Models
         public string Ten { get; set; } = null!;
         public string DiaChi { get; set; } = null!;
         public string SoDienThoai { get; set; } = null!;
+        public int IdLoaiNv { get; set; }
+        public int IdKyNang { get; set; }
     }
 }

@@ -14,26 +14,63 @@ namespace QuanLyNhanVien.Controllers
         private readonly quanlynhanvienContext _context;
 
         public NhanViensController(quanlynhanvienContext context)
+
         {
             _context = context;
         }
 
-        // GET: NhanViens
-        public async Task<IActionResult> Index()
+        public class NhanVienn
         {
-              return View(await _context.NhanViens.ToListAsync());
+            public int Id { get; set; }
+            public string Name { get; set; }
+            //public string Loai { get; set; }
+            public string SoDT { get; set; }
+            public string Skill { get; set; }
+            public string ChucVu { get; set; }
+            public string DiaChi { get; set; }
         }
 
-        // GET: NhanViens/Details/5
+        // GET: NhanViens1
+        public async Task<IActionResult> Index()
+        {
+
+                
+                return View(await _context.NhanViens.ToListAsync());
+        }
+
+        // GET: NhanViens1/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.NhanViens == null)
             {
                 return NotFound();
             }
+            //NhanVienn nhanVienns = (from p in _context.NhanViens
+            //                        join c in _context.LoaiNhanViens on p.IdLoaiNv equals c.IdLoaiNv
+            //                        select new NhanVienn
+            //                        {
+            //                            Id = p.Id,
+            //                            Name = p.Ten,
+            //                            Loai = c.TenLoaiNv
+            //                        }).ToList();
 
-            var nhanVien = await _context.NhanViens
+
+
+            
+            //var nhanvien = await _context.NhanViens;
+            NhanVienn nhanVien = await (from p in _context.NhanViens 
+                                  join c in _context.LoaiNhanViens on p.IdLoaiNv equals c.IdLoaiNv 
+                                  join d in _context.KyNangs on p.IdKyNang equals d.IdKyNang
+                                  select new NhanVienn { 
+                                  Id = p.Id,
+                                  Name=p.Ten,
+                                  ChucVu = c.TenLoaiNv,
+                                  SoDT=p.SoDienThoai,
+                                  Skill=d.TenLoaiKn,
+                                  DiaChi=p.DiaChi})
                 .FirstOrDefaultAsync(m => m.Id == id);
+                
+            
             if (nhanVien == null)
             {
                 return NotFound();
@@ -42,31 +79,52 @@ namespace QuanLyNhanVien.Controllers
             return View(nhanVien);
         }
 
-        // GET: NhanViens/Create
+        // GET: NhanViens1/Create
         public IActionResult Create()
-        {
+        {   //Tạo select chức vụ nhân viên 
+            List<LoaiNhanVien> LoaiNV = _context.LoaiNhanViens.ToList();
+            SelectList ListChucVu = new SelectList(LoaiNV, "IdLoaiNv", "TenLoaiNv");
+            ViewBag.LoaiNvlist = ListChucVu;
+            //Tạo select skill
+            List<KyNang> KyNang = _context.KyNangs.ToList(); 
+            SelectList ListKyNang = new SelectList(KyNang, "IdKyNang", "TenLoaiKn");
+            ViewBag.KyNanglist = ListKyNang;
+
             return View();
         }
 
-        // POST: NhanViens/Create
+        // POST: NhanViens1/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ten,DiaChi,SoDienThoai")] NhanVien nhanVien)
+        public async Task<IActionResult> Create([Bind("Id,Ten,DiaChi,SoDienThoai,IdLoaiNv,IdKyNang")] NhanVien nhanVien)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(nhanVien);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             return View(nhanVien);
         }
 
-        // GET: NhanViens/Edit/5
+        // GET: NhanViens1/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            //Tạo select chức vụ 
+
+            List<LoaiNhanVien> dep =_context.LoaiNhanViens.ToList();
+            SelectList ListChucVu = new SelectList(dep, "IdLoaiNv", "TenLoaiNv");
+            ViewBag.LoaiNvlist = ListChucVu;
+
+            //Tạo select skill
+            List<KyNang> KyNang = _context.KyNangs.ToList();
+            SelectList ListKyNang = new SelectList(KyNang, "IdKyNang", "TenLoaiKn");
+            ViewBag.KyNanglist = ListKyNang;
+
+
+
             if (id == null || _context.NhanViens == null)
             {
                 return NotFound();
@@ -80,12 +138,12 @@ namespace QuanLyNhanVien.Controllers
             return View(nhanVien);
         }
 
-        // POST: NhanViens/Edit/5
+        // POST: NhanViens1/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Ten,DiaChi,SoDienThoai")] NhanVien nhanVien)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Ten,DiaChi,SoDienThoai,IdLoaiNv,IdKyNang")] NhanVien nhanVien)
         {
             if (id != nhanVien.Id)
             {
@@ -115,15 +173,25 @@ namespace QuanLyNhanVien.Controllers
             return View(nhanVien);
         }
 
-        // GET: NhanViens/Delete/5
+        // GET: NhanViens1/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.NhanViens == null)
             {
                 return NotFound();
             }
-
-            var nhanVien = await _context.NhanViens
+            NhanVienn nhanVien = await (from p in _context.NhanViens
+                                        join c in _context.LoaiNhanViens on p.IdLoaiNv equals c.IdLoaiNv
+                                        join d in _context.KyNangs on p.IdKyNang equals d.IdKyNang
+                                        select new NhanVienn
+                                        {
+                                            Id = p.Id,
+                                            Name = p.Ten,
+                                            ChucVu = c.TenLoaiNv,
+                                            SoDT = p.SoDienThoai,
+                                            Skill = d.TenLoaiKn,
+                                            DiaChi = p.DiaChi
+                                        })           
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (nhanVien == null)
             {
@@ -133,7 +201,7 @@ namespace QuanLyNhanVien.Controllers
             return View(nhanVien);
         }
 
-        // POST: NhanViens/Delete/5
+        // POST: NhanViens1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
